@@ -1,0 +1,18 @@
+<RCC>
+  <qresource prefix="_rc">
+    <file>add_plus.png</file>
+    <file>article.ico</file>
+    <file>back_clear.png</file>
+    <file>cancel.png</file>
+    <file>eraser.png</file>
+    <file>pdf_icon.png</file>
+    <file>quick_search.png</file>
+    <file>remove_minus.png</file>
+    <file>ressource.qrc</file>
+    <file>right_arrow.png</file>
+    <file>search.png</file>
+    <file>update.png</file>
+    <file>validate.png</file>
+    <file>word_icon.png</file>
+  </qresource>
+</RCC>

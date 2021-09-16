@@ -1,0 +1,14 @@
+Methode d'hizoka avec un fichier ressource que l'on nommera ressources.
+créer un fichier ressource avec Qtdesinger onglet explorateur de ressources>cliquez sur les 3 points à gauche>creer un fichier qrc dans la nouvelle boite de dialogue qui s'ouvre
+creer un nouveau prefix (le renommer ?)
+on importe les icones
+on converti le dit fichier qrc en py avec la commande suivante
+
+Code :	Sélectionner tout - Visualiser dans une fenêtre à part
+pyrcc5 ressources.qrc -o ressources_rc.py
+on met le fichier rc.py avec ses fichiers
+on l'importe dans le fichier principal avec import ressources_rc
+on regenere le fichier ui une fois tout fini avant de lancer le fichier pour voir le resultat dans une console python
+
+Code :	Sélectionner tout - Visualiser dans une fenêtre à part
+pyuic5 -x monfichierui -o monfichierui.py

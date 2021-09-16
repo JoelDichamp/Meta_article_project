@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormMetaArticle</class>
+ <widget class="QWidget" name="FormMetaArticle">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1078</width>
+    <height>573</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>8</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Meta-Article</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="icons/ressource.qrc">
+    <normaloff>:/_rc/article.ico</normaloff>:/_rc/article.ico</iconset>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QFrame" name="frame_btns">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QWidget" name="w_search" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="btn_erase_search">
+           <property name="minimumSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Delete the text to search</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="icons/ressource.qrc">
+             <normaloff>:/_rc/eraser.png</normaloff>:/_rc/eraser.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="le_search">
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>Enter the text to search</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_quick_search">
+           <property name="minimumSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Quick search ignoring the case</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="icons/ressource.qrc">
+             <normaloff>:/_rc/quick_search.png</normaloff>:/_rc/quick_search.png</iconset>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="w_search_tags" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="btn_search_tags">
+           <property name="minimumSize">
+            <size>
+             <width>160</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>160</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Search tags</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons/ressource.qrc">
+             <normaloff>:/_rc/search.png</normaloff>:/_rc/search.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_cancel_search_tags">
+           <property name="minimumSize">
+            <size>
+             <width>160</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>160</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Cancel search tags</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons/ressource.qrc">
+             <normaloff>:/_rc/cancel.png</normaloff>:/_rc/cancel.png</iconset>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="w_article" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QPushButton" name="btn_remove_article">
+           <property name="minimumSize">
+            <size>
+             <width>180</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>180</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Remove meta-articles</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons/ressource.qrc">
+             <normaloff>:/_rc/remove_minus.png</normaloff>:/_rc/remove_minus.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_add_article">
+           <property name="minimumSize">
+            <size>
+             <width>160</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>160</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Add a meta-article</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons/ressource.qrc">
+             <normaloff>:/_rc/add_plus.png</normaloff>:/_rc/add_plus.png</iconset>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QTableWidget" name="tableArticles">
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustIgnored</enum>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="rowCount">
+      <number>2</number>
+     </property>
+     <property name="columnCount">
+      <number>4</number>
+     </property>
+     <attribute name="horizontalHeaderVisible">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="horizontalHeaderCascadingSectionResizes">
+      <bool>false</bool>
+     </attribute>
+     <row/>
+     <row/>
+     <column>
+      <property name="text">
+       <string>Meta-article</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Tags</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Pdf file</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Notes file</string>
+      </property>
+     </column>
+     <item row="0" column="0">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="flags">
+       <set>ItemIsSelectable|ItemIsEnabled</set>
+      </property>
+     </item>
+     <item row="0" column="1">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="flags">
+       <set>ItemIsSelectable|ItemIsEnabled</set>
+      </property>
+     </item>
+     <item row="0" column="2">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="flags">
+       <set>ItemIsSelectable|ItemIsEnabled</set>
+      </property>
+     </item>
+     <item row="0" column="3">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="flags">
+       <set>ItemIsSelectable|ItemIsEnabled</set>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QFrame" name="frame_label">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="icons/ressource.qrc"/>
+ </resources>
+ <connections/>
+</ui>
