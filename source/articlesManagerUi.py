@@ -2,7 +2,7 @@ from logging import info
 from typing import Tuple
 from PySide2 import QtWidgets, QtCore
 from PySide2.QtCore import Slot, Qt
-from PySide2.QtGui import QFont, QTextCharFormat
+from PySide2.QtGui import QFont, QTextCharFormat, QKeySequence
 from functools import partial
 from typing import Tuple
 
@@ -13,6 +13,7 @@ import re
 import qdarkstyle
 
 import utils
+import utilsFrm as uf
 from uis.main_form_meta_article import Ui_FormMetaArticle
 from majArticleUi import MajArticle
 from searchTagsUi import SearchTags, E_PAR_OPEN, E_PAR_CLOSE, E_OR, E_AND
@@ -27,6 +28,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
     self.setupUi(self)
     self.btn_cancel_search_tags.setVisible(False)
     self.setupConnections()
+    self.setupShortCuts()
     self.searchTagsReq = ''
     self.ignoreCase = False
     self.getArticles()
@@ -34,12 +36,17 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
 
   def setupConnections(self):
     self.btn_add_article.clicked.connect(partial(self.btnMajArticlePressed, utils.FCT_CREATE))
-    self.btn_remove_article.clicked.connect(partial(self.btnRemoveArticlePressed))
+    self.btn_remove_article.clicked.connect(self.btnRemoveArticlePressed)
     self.tableArticles.doubleClicked.connect(self.on_doubleClick)
-    self.btn_quick_search.clicked.connect(partial(self.btnQuickSearchPressed))
-    self.btn_erase_search.clicked.connect(partial(self.btnEraseSearchPressed))
+    self.btn_quick_search.clicked.connect(self.btnQuickSearchPressed)
+    self.le_search.returnPressed.connect(self.btnQuickSearchPressed)
+    self.btn_erase_search.clicked.connect(self.btnEraseSearchPressed)
     self.btn_search_tags.clicked.connect(self.btnSearchTagsPressed)
     self.btn_cancel_search_tags.clicked.connect(self.btnCancelSearchTagsPressed)
+
+
+  def setupShortCuts(self):
+    QtWidgets.QShortcut(QKeySequence('Esc'), self, self.close)
 
 
   @Slot() 
@@ -59,7 +66,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
 
 
   def btnMajArticlePressed(self, fct: str, columnItem: int = utils.COL_ARTICLE, articleName: str = '', dictArticle: dict = {}):
-    dlg = MajArticle(fct, columnItem, articleName, dictArticle)
+    dlg = MajArticle(fct, self.listAllTags, columnItem, articleName, dictArticle)
     dlg.exec_()
     if dlg.result() == QtWidgets.QDialog.Accepted:
       self.getArticles()
@@ -84,7 +91,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
       QtWidgets.QMessageBox.warning(self, "Warning", "No meta-article has been selected!")
     else:
       names = "'" + "' '".join(listArticles) + "'"
-      q = f"Do you confirm the removal of the following meta-articles:\n\t{names}" 
+      q = f"Do you confirm the removal of the following meta-article{'s' if len(listArticles) > 1 else ''}:\n\t{names}" 
       reply = QtWidgets.QMessageBox.question(self, "Question", q)
       if reply == QtWidgets.QMessageBox.Yes:
         ok = True
@@ -136,9 +143,9 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
     for item in listItems:
       if item == E_PAR_OPEN or item == E_PAR_CLOSE:
         regEx += item
-      elif item == E_OR:
+      elif item.upper() == E_OR:
         regEx += "|"
-      elif item != E_AND:
+      elif item.upper() != E_AND:
         regEx += f"(?=.*{item})"
         item = item.replace(utils.WORD_BOUNDARY, '')
         if regExHighlight:
@@ -146,7 +153,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
         else:
           regExHighlight = item
 
-    print(f"'{req}' -> '{regEx}'") 
+    # print(f"'{req}' -> '{regEx}'") 
     return regEx, regExHighlight
 
 
@@ -189,7 +196,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
     self.label.setText(text_label)
 
 
-  def putinfo(self, search: bool = False, ignoreCase: bool = False, listPathArticles: list[pathlib.Path] = [], infoLabel: str = ''):
+  def putInfo(self, search: bool = False, ignoreCase: bool = False, listPathArticles: list[pathlib.Path] = [], infoLabel: str = ''):
     if infoLabel:
       infoCase = 'IgnoreCase' if ignoreCase else 'CaseSensitive'
       infoLabel += '   ' + infoCase
@@ -197,6 +204,8 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
     self.putLabel(infoLabel)
     if search and (not listPathArticles):
       QtWidgets.QMessageBox.warning(self, "Warning", "No meta-article was found!")
+    else:
+      self.btn_search_tags.setVisible(len(self.listAllTags) > 0) 
 
 
   def getArticles(self, search: bool = False, regEx: str = '', ignoreCase: bool = False, listPathArticles: list[pathlib.Path] = [], infoLabel: str = ''):
@@ -232,7 +241,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
       iLine += 1
 
     self.listAllTags.sort()
-    self.putinfo(search, ignoreCase, listPathArticles, infoLabel)
+    self.putInfo(search, ignoreCase, listPathArticles, infoLabel)
 
 
   def initHighlightDelegate(self, regEx, ignoreCase: bool = False):
@@ -245,7 +254,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
       self._delegate.regex.setCaseSensitivity(Qt.CaseInsensitive)
 
     fmt = QTextCharFormat()
-    fmt.setForeground(QtCore.Qt.green)
+    fmt.setForeground(uf.COLOR_FOUND_TXT)
     fmt.setFontWeight(QFont.Bold)
     self._delegate.highlightFormat = fmt
     self.tableArticles.setItemDelegate(self._delegate)

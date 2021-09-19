@@ -181,7 +181,7 @@ class Ui_FormMetaArticle(object):
     # setupUi
 
     def retranslateUi(self, FormMetaArticle):
-        FormMetaArticle.setWindowTitle(QCoreApplication.translate("FormMetaArticle", u"Meta-Article", None))
+        FormMetaArticle.setWindowTitle(QCoreApplication.translate("FormMetaArticle", u"Meta_article_project", None))
 #if QT_CONFIG(tooltip)
         self.btn_erase_search.setToolTip(QCoreApplication.translate("FormMetaArticle", u"Delete the text to search", None))
 #endif // QT_CONFIG(tooltip)

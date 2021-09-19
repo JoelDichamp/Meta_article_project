@@ -1,31 +1,37 @@
 from PySide2 import QtWidgets
-from PySide2.QtCore import Slot, QSize
 from functools import partial 
-from PySide2.QtCore import Qt
-from PySide2.QtGui import QIcon
+from PySide2.QtCore import Slot, Qt, QRegExp
+from PySide2.QtGui import QKeySequence, QRegExpValidator
 
 from uis.diag_maj_article import Ui_Dialog
+from updateTagUi import UpdateTag
 import utils
 import articlesManager as am
 import utilsFrm as uf
 
 
 class MajArticle(QtWidgets.QDialog, Ui_Dialog):
-    def __init__(self, fct: str, columnItem: int = utils.COL_ARTICLE, articleName: str = '', dictArticle: dict = {}):
+    def __init__(self, fct: str, listAllTags: list[str], columnItem: int = utils.COL_ARTICLE, articleName: str = '', dictArticle: dict = {}):
       super().__init__()
       self.fct = fct
+      self.listAllTags = listAllTags
       self.articleNameOri = articleName
       self.setupUi(self)
       self.modifSetupUi()
       if fct == utils.FCT_UPDATE:
         self.fillWidgets(columnItem, dictArticle)
       self.setupConnections()
+      self.setupShortCuts()
       
+
+    def setupShortCuts(self):
+      QtWidgets.QShortcut(QKeySequence('Esc'), self, self.close)
+
 
     def modifSetupUi(self):
       title = "Add a meta-article"
       if self.fct == utils.FCT_UPDATE:
-        title = "Update the meta-article"
+        title = "Update meta-article"
       self.setWindowTitle(title)
 
       btn_ok = self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok)
@@ -37,20 +43,81 @@ class MajArticle(QtWidgets.QDialog, Ui_Dialog):
 
       uf.btnSetIcon(btn_cancel, uf.BTN_CANCEL)
 
+      regex = QRegExp("[^<>:|?*\"/\\\]+") #chars invalid for a file name : <, >, :, |, ?, *, ", /, \
+      validator = QRegExpValidator(regex)
+      self.le_articleName.setValidator(validator)
+      
+      self.cb_tag.addItems(self.listAllTags)
+      uf.cbEditable(self.cb_tag, uf.RE_TAG)
+      self.cb_tag.setCurrentIndex(-1)
 
+      self.list_tags.setSelectionMode(QtWidgets.QListWidget.ExtendedSelection)
+
+      
     def fillWidgets(self, columnItem: int, dictArticle: dict):
       self.le_articleName.setText(self.articleNameOri)
-      self.te_tags.setText(dictArticle[utils.D_TAGS])
+      self.list_tags.addItems(dictArticle[utils.D_TAGS].split())
       self.pdfFile.addItem(str(dictArticle[utils.D_PATH_PDF]))
       self.notesFile.addItem(str(dictArticle[utils.D_PATH_NOTES]))
 
+      self.list_tags.sortItems()
+
       if columnItem == utils.COL_TAGS:
-        self.te_tags.setFocus(Qt.OtherFocusReason)
+        self.cb_tag.setFocus(Qt.OtherFocusReason)
 
 
     def setupConnections(self):
       self.btn_pdfFile.clicked.connect(partial(self.selectFile, utils.D_PDF, utils.EXT_PDF))
       self.btn_notesFile.clicked.connect(partial(self.selectFile, utils.D_NOTES, utils.EXT_NOTES))
+      self.btn_add_tag.clicked.connect(self.addTag)
+      self.btn_remove_tag.clicked.connect(self.removeTags)
+      self.list_tags.doubleClicked.connect(self.on_doubleClick)
+
+
+    def addTagOk(self, newTag: str) -> bool:
+      ok = True
+      tags = self.list_tags.findItems(newTag, Qt.MatchExactly)
+      if tags:
+        QtWidgets.QMessageBox.warning(self, "Warning", f"The '{newTag}' tag already exists!")
+        self.cb_tag.setFocus(Qt.OtherFocusReason)
+        ok = False
+
+      return ok
+
+
+    def addTag(self):
+      tag = self.cb_tag.currentText().strip()
+      if not tag:
+        self.cb_tag.setFocus(Qt.OtherFocusReason)
+      else:
+        if self.addTagOk(tag):
+          self.list_tags.addItem(tag)
+          self.list_tags.sortItems()
+          self.cb_tag.setCurrentIndex(-1)
+          self.cb_tag.setFocus(Qt.OtherFocusReason)
+
+
+    @Slot() 
+    def on_doubleClick(self, index):
+      tag = self.list_tags.item(index.row()).text()
+      dlg = UpdateTag(tag, self.list_tags)
+      dlg.exec_()
+      if dlg.result() == QtWidgets.QDialog.Accepted:
+        self.list_tags.item(index.row()).setText(dlg.tag)
+
+
+    def removeTags(self):
+      listTagsSelected = self.list_tags.selectedItems()
+      lst = []
+      [lst.append(t.text()) for t in listTagsSelected]
+      if not lst:
+        QtWidgets.QMessageBox.warning(self, "Warning", "No tag has been selected!")
+      else:
+        lstNames = "'" + "' '".join(lst) + "'"
+        reply = QtWidgets.QMessageBox.question(self, "Question", f"Do you confirm the removal of the following tag{'s' if len(lst) > 1 else ''}:\n\t{lstNames}")
+        if reply == QtWidgets.QMessageBox.Yes:
+          for tagSelected in listTagsSelected:
+            self.list_tags.takeItem(self.list_tags.row(tagSelected))
 
 
     def selectFile(self, typeFile: str, ext: str):
@@ -93,15 +160,11 @@ class MajArticle(QtWidgets.QDialog, Ui_Dialog):
 
       
     def manageTags(self):
-      tags = self.te_tags.toPlainText()
-      tags = tags.replace("\n", " ")
-      list_tags = tags.split()
-      list_tags_clean = []
-      for tag in list_tags:
-        if tag not in list_tags_clean:
-          list_tags_clean.append(tag)
+      items = []
+      for i in range(self.list_tags.count()):
+        items.append(self.list_tags.item(i).text())
 
-      return ' '.join(list_tags_clean)
+      return ' '.join(items)
 
     
       

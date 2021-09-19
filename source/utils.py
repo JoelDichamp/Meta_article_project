@@ -22,6 +22,13 @@ COL_NOTES = 3
 
 WORD_BOUNDARY = r'\b'
 
+
 currentDir = pathlib.Path(__file__).resolve().parent
-dataFolder = currentDir.parent / "data"
-# print(current_dir, data_folder)
+
+if currentDir.stem == "source":
+  dataFolder = currentDir.parent / "data"
+else:
+  # si on fait un exe, il n'y a pas le dir source
+  dataFolder = currentDir / "data"
+
+dataFolder.mkdir(exist_ok=True)

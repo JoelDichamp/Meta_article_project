@@ -1,7 +1,11 @@
 from re import I
 from PySide2 import QtWidgets
+from PySide2 import QtCore
+from PySide2 import QtGui
 from PySide2.QtCore import Slot
 from PySide2.QtCore import Qt
+from PySide2.QtGui import QKeySequence
+import re
 
 from uis.diag_search_tags import Ui_Dialog
 import utils
@@ -21,6 +25,11 @@ class SearchTags(QtWidgets.QDialog, Ui_Dialog):
       self.setupUi(self)
       self.modifSetupUi(searchTagsReq, ignoreCase)
       self.setupConnections()
+      self.setupShortCuts()
+
+
+  def setupShortCuts(self):
+    QtWidgets.QShortcut(QKeySequence('Esc'), self, self.close)
   
   
   def modifSetupUi(self, searchTagsReq: str, ignoreCase: bool):
@@ -30,7 +39,12 @@ class SearchTags(QtWidgets.QDialog, Ui_Dialog):
     uf.btnSetIcon(btn_cancel, uf.BTN_CANCEL)
 
     self.cb_tag.addItems(self.listAllTags)
-    self.cb_tag.setEditable(True)
+    uf.cbEditable(self.cb_tag, uf.RE_TAG)
+
+    regex_le = QtCore.QRegExp(uf.RE_REQ) 
+    validator_le = QtGui.QRegExpValidator(regex_le)
+    self.le_req.setValidator(validator_le)
+
     self.initUi(searchTagsReq, ignoreCase)
 
 
@@ -40,53 +54,27 @@ class SearchTags(QtWidgets.QDialog, Ui_Dialog):
     if searchTagsReq:
       self.cbx_ignore_case.setChecked(ignoreCase)
       self.le_req.setText(searchTagsReq)
-      listItemsReq = searchTagsReq.split()
-      lastItem = listItemsReq[-1]
-      if lastItem == E_PAR_CLOSE:
-        txtItem = E_PAR_CLOSE
-      else:
-        txtItem = E_TAG
-      self.automatReq(txtItem)
-    else:
-      self.cbItemFilled([E_PAR_OPEN, E_TAG])
+    self.le_req.setFocus(Qt.OtherFocusReason)
     
 
   def setupConnections(self):
     self.btn_req.clicked.connect(self.btnReqPressed)
-    self.cb_item.currentTextChanged.connect(self.cbItemChanged)
     self.btn_erase_req.clicked.connect(self.btnEraseReqPressed)
-    self.btn_erase_last_item.clicked.connect(self.btnEraseLastItemPressed)
 
 
   def frameTagCleaned(self):
-    self.cb_tag.setCurrentIndex(0)
+    self.cb_tag.setCurrentIndex(-1)
     self.cbx_word_boundary.setChecked(False)
-    self.frame_tag.setVisible(False)
 
 
-  def cbItemChanged(self):
-    text = self.cb_item.currentText()
-    if text == E_TAG:
-      self.frame_tag.setVisible(True)
-      self.cb_tag.setFocus(Qt.OtherFocusReason)
-    else:
-      self.frameTagCleaned()
-
-
-  def cbItemFilled(self, listItems: list[str]):
-    self.cb_item.clear()
-    self.cb_item.addItems(listItems)
-
-
-  def automatReq(self, txtItem: str, deleteLastItem: bool = False):
+  def automatReq(self, txtItem: str, listItemsReq: list[str]) -> list[str]:
+    listItems = []
     # print(txtItem, self.nbParOpen)
     if txtItem == E_TAG:
       """ suit une ) ou un ope : 
         ) : que si on a une ( en cours et un ope avant le tag
         ope : c'est le même que celui (s'il existe) qui est avant le tag saisi
       """
-      listItems = []
-      listItemsReq = self.le_req.text().split()
       penultimateItem = ''
       if len(listItemsReq) >= 2:
         penultimateItem = listItemsReq[-2]
@@ -98,16 +86,12 @@ class SearchTags(QtWidgets.QDialog, Ui_Dialog):
         # c'est une ( ou rien
         listItems.extend([E_OR, E_AND])
 
-      self.cbItemFilled(listItems)
-      self.frameTagCleaned()
-
     elif txtItem == E_PAR_OPEN:
       """ suit une ( ou un tag 
         maj du nb de parenthèses ouvrantes
       """
-      if not deleteLastItem:
-        self.nbParOpen += 1
-      self.cbItemFilled([E_PAR_OPEN, E_TAG])
+      self.nbParOpen += 1
+      listItems = [E_PAR_OPEN, E_TAG]
 
     elif txtItem == E_PAR_CLOSE:
       """ suit une ) ou un ope :
@@ -115,31 +99,27 @@ class SearchTags(QtWidgets.QDialog, Ui_Dialog):
         ope : OR ou AND
         maj du nb de parenthèses ouvrantes
       """
-      if not deleteLastItem:
-        if self.nbParOpen > 0: 
-          self.nbParOpen -= 1
-      listItems = []
-      if self.nbParOpen > 0:
+      if self.nbParOpen > 0: 
+        self.nbParOpen -= 1
         listItems.append(E_PAR_CLOSE)
       listItems.extend([E_OR, E_AND])
-      self.cbItemFilled(listItems)
 
     elif txtItem == E_OR or txtItem == E_AND:
       """ suit une ( ou un tag 
       """
-      self.cbItemFilled([E_PAR_OPEN, E_TAG])
+      listItems = [E_PAR_OPEN, E_TAG]
+
+    return listItems
 
 
   def btnReqPressed(self):
-    txtItem = self.cb_item.currentText()
-    if txtItem == E_TAG:
-      text = self.cb_tag.currentText().strip()
-      if not text:
+    text = self.cb_tag.currentText().strip()
+    if not text:
         QtWidgets.QMessageBox.warning(self, "Warning", "No tag has been selected!")
-      if self.cbx_word_boundary.isChecked():
-        text = utils.WORD_BOUNDARY + text + utils.WORD_BOUNDARY
-    else:
-      text = txtItem
+        self.cb_tag.setFocus(Qt.OtherFocusReason)
+        return
+    if self.cbx_word_boundary.isChecked():
+      text = utils.WORD_BOUNDARY + text + utils.WORD_BOUNDARY
     
     le_text = self.le_req.text()
     if le_text:
@@ -147,8 +127,8 @@ class SearchTags(QtWidgets.QDialog, Ui_Dialog):
     else:
       le_text = text
     self.le_req.setText(le_text)
-    
-    self.automatReq(txtItem)
+    self.le_req.setFocus(Qt.OtherFocusReason)
+    self.frameTagCleaned()
     
 
   def btnEraseReqPressed(self):
@@ -156,49 +136,61 @@ class SearchTags(QtWidgets.QDialog, Ui_Dialog):
     self.initUi()
 
 
-  def btnEraseLastItemPressed(self):
-    listItemsReq = self.le_req.text().split()
-    if not listItemsReq:
-      return
+  def whichItem(self, iItem : int, listItemsReq: list[str]) -> str:
+    item = listItemsReq[iItem]
+    if item.upper() == E_OR or item.upper() == E_AND:
+      item = item.upper()
+      listItemsReq[iItem] = item
 
-    lastItem = listItemsReq[-1]
-    if lastItem == E_PAR_OPEN:
-      self.nbParOpen -= 1
-    elif lastItem == E_PAR_CLOSE:
-      self.nbParOpen += 1
+    if item != E_PAR_CLOSE and item != E_PAR_OPEN and item != E_OR and item != E_AND:
+      item = E_TAG
 
-    # print("lastitem à virer", lastItem, "nbParOpen", self.nbParOpen)
+    return item
 
-    listItemsReq = listItemsReq[0:-1]
-    self.le_req.setText(' '.join(listItemsReq))
 
-    if not listItemsReq:
-      self.cbItemFilled([E_PAR_OPEN, E_TAG])
-      return
-
-    lastItem = listItemsReq[-1]
-    if lastItem != E_PAR_CLOSE and lastItem != E_PAR_OPEN and lastItem != E_OR and lastItem != E_AND:
-      lastItem = E_TAG
-
-    # print("lastitem pour automat", lastItem)
-    self.automatReq(lastItem, True)
+  def putMessage(self, msg: str):
+    QtWidgets.QMessageBox.warning(self, "Warning", msg)
+    self.le_req.setFocus(Qt.OtherFocusReason)
 
 
   def isReqValid(self) -> bool:
     ok = False
 
-    listItemsReq = self.le_req.text().split()
-    if not listItemsReq:
-      QtWidgets.QMessageBox.warning(self, "Warning", "Invalid query: the query was not entered!")
+    txtReq = self.le_req.text().strip()
+    if not txtReq:
+      self.putMessage("Invalid query: the query was not entered!")
+      return ok
 
-    elif self.nbParOpen != 0:
-      QtWidgets.QMessageBox.warning(self, "Warning", "Invalid query: the number of brackets is incorrect!")
+    nbParOpen = txtReq.count(E_PAR_OPEN)
+    nbParClose = txtReq.count(E_PAR_CLOSE)
+    if nbParOpen != nbParClose:
+      self.putMessage(f"Invalid query: the number of brackets is incorrect, {nbParOpen} ( and {nbParClose} )!")
+      return ok
     
-    elif listItemsReq[-1] == E_AND or listItemsReq[-1] == E_OR:
-      QtWidgets.QMessageBox.warning(self, "Warning", "Invalid query: the query is incomplete!")
+    txtReq = txtReq.replace(E_PAR_OPEN, f' {E_PAR_OPEN} ').replace(E_PAR_CLOSE, f' {E_PAR_CLOSE} ')
+    listItemsReq = txtReq.split()
+    for i in range(len(listItemsReq)):
+      # print("i", i, listItemsReq[i])
+      txtItem = self.whichItem(i, listItemsReq)
+      # print("txtItem", txtItem, listItemsReq)
+      listValidItems = self.automatReq(txtItem, listItemsReq[0:i+1])
+      # print("listValidItems", listValidItems)
 
-    else:
-      ok = True
+      if i < len(listItemsReq) - 1:
+        itemNext = self.whichItem((i+1), listItemsReq)
+        print("itemNext", itemNext)
+        ok = False
+        for item in listValidItems:
+          if item == itemNext:
+            ok = True
+            break
+        if not ok:
+          self.putMessage(f"Invalid query: Unexpected rank {i+1} '{itemNext}' element,\n\texpected {' or '.join(listValidItems)}!")
+          break
+      else: # last item
+        ok = (txtItem != E_AND and txtItem != E_OR)
+        if not ok:
+          self.putMessage("Invalid query: the query is incomplete!")
 
     return ok
 

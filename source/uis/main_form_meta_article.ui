@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Meta-Article</string>
+   <string>Meta_article_project</string>
   </property>
   <property name="windowIcon">
    <iconset resource="icons/ressource.qrc">

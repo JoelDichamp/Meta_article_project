@@ -38,10 +38,8 @@ def copyToDataFolder(articleName: str, fullFile: str, ext: str, action: str = 'c
       p_dest = utils.dataFolder / articleName / (articleName + ext)
       try:
         if action == 'copy':
-          # print(str(datetime.now()))
           shutil.copy(p_fullFile, p_dest)
-          print(f"Copy ok : {p_fullFile} -> {p_dest}")
-          # print(str(datetime.now()))
+          # print(f"Copy ok : {p_fullFile} -> {p_dest}")
         elif action == 'move':
           shutil.move(p_fullFile, p_dest)
       except:
@@ -161,13 +159,5 @@ def _printDictArticles(d):
     print("-" * 50)
 
 if __name__ == "__main__":
-  # ok, msg = majArticle('update', 'Toto2021', 'Toto2021', notes=r"C:\_Data\jd\Thèse_Aurélie\__Verzegnassi_these vf_25avril21.docx", pdf=r"C:\_Data\jd\Honda Xadv\Assurance Scooter.PDF",
-  #   tags='Toto Titi Tata Tétà')
-  # print(ok, msg)
-  # ok, msg = majArticle('update', 'Toto2021', 'Toto2021', tags='Toto Titi Tata Tétà')
-  # print(ok, msg)
-  # ok, msg = removeArticle('Toto2021')
-  # print(ok, msg)
-
   d = getArticles()
   _printDictArticles(d)

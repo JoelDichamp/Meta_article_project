@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>861</width>
-    <height>264</height>
+    <width>750</width>
+    <height>388</height>
    </rect>
   </property>
   <property name="font">
@@ -59,7 +59,115 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QTextEdit" name="te_tags"/>
+    <widget class="QFrame" name="frame_tag">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QWidget" name="w_tag" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="label_tag">
+           <property name="text">
+            <string>Tag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cb_tag">
+           <property name="minimumSize">
+            <size>
+             <width>170</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>List of all tags</string>
+           </property>
+           <property name="maxVisibleItems">
+            <number>20</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_add_tag">
+        <property name="minimumSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Add the selected tag to the list&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="icons/ressource.qrc">
+          <normaloff>:/_rc/right_arrow.png</normaloff>:/_rc/right_arrow.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="w_list_tags" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QPushButton" name="btn_remove_tag">
+           <property name="minimumSize">
+            <size>
+             <width>110</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>110</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Remove tags</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons/ressource.qrc">
+             <normaloff>:/_rc/remove_minus.png</normaloff>:/_rc/remove_minus.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="list_tags"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="lab_pdfFile">

@@ -28,8 +28,8 @@ class HighlightDelegate(QtWidgets.QStyledItemDelegate):
     textRect = style.subElementRect(
         QtWidgets.QStyle.SE_ItemViewItemText, options)
 
-    if index.column() != 0:
-        textRect.adjust(5, 0, 0, 0)
+    # if index.column() != 0:
+    #     textRect.adjust(5, 0, 0, 0)
 
     the_constant = 4
     margin = (option.rect.height() - options.fontMetrics.height()) // 2
