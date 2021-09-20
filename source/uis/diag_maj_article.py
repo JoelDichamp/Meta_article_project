@@ -20,7 +20,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(750, 388)
+        Dialog.resize(750, 477)
         font = QFont()
         font.setPointSize(8)
         Dialog.setFont(font)
@@ -106,6 +106,14 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.list_tags)
 
+        self.label_info_tag = QLabel(self.w_list_tags)
+        self.label_info_tag.setObjectName(u"label_info_tag")
+        self.label_info_tag.setStyleSheet(u"border-color: rgb(69, 83, 100);\n"
+"border-width: 1px;\n"
+"border-radius: 4px;")
+
+        self.verticalLayout.addWidget(self.label_info_tag)
+
 
         self.horizontalLayout.addWidget(self.w_list_tags)
 
@@ -188,6 +196,7 @@ class Ui_Dialog(object):
 #endif // QT_CONFIG(tooltip)
         self.btn_add_tag.setText("")
         self.btn_remove_tag.setText(QCoreApplication.translate("Dialog", u"Remove tags", None))
+        self.label_info_tag.setText("")
         self.lab_pdfFile.setText(QCoreApplication.translate("Dialog", u"PDF File", None))
 #if QT_CONFIG(tooltip)
         self.pdfFile.setToolTip(QCoreApplication.translate("Dialog", u"Drag and drop the pdf file here!", None))

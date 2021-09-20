@@ -61,7 +61,7 @@ class MajArticle(QtWidgets.QDialog, Ui_Dialog):
       self.notesFile.addItem(str(dictArticle[utils.D_PATH_NOTES]))
 
       self.list_tags.sortItems()
-
+      self.putLabel()
       if columnItem == utils.COL_TAGS:
         self.cb_tag.setFocus(Qt.OtherFocusReason)
 
@@ -72,6 +72,14 @@ class MajArticle(QtWidgets.QDialog, Ui_Dialog):
       self.btn_add_tag.clicked.connect(self.addTag)
       self.btn_remove_tag.clicked.connect(self.removeTags)
       self.list_tags.doubleClicked.connect(self.on_doubleClick)
+
+
+    def putLabel(self, info: str = ''):
+      nbTags = self.list_tags.count()
+      text_label = f"{str(nbTags)} tag{'s' if nbTags > 1 else ''}" 
+      if info:
+        text_label += " - " + info
+      self.label_info_tag.setText(text_label)
 
 
     def addTagOk(self, newTag: str) -> bool:
@@ -94,8 +102,9 @@ class MajArticle(QtWidgets.QDialog, Ui_Dialog):
           self.list_tags.addItem(tag)
           self.list_tags.sortItems()
           self.cb_tag.setCurrentIndex(-1)
+          self.putLabel(f"'{tag}' add OK!")
           self.cb_tag.setFocus(Qt.OtherFocusReason)
-
+          
 
     @Slot() 
     def on_doubleClick(self, index):
@@ -104,6 +113,8 @@ class MajArticle(QtWidgets.QDialog, Ui_Dialog):
       dlg.exec_()
       if dlg.result() == QtWidgets.QDialog.Accepted:
         self.list_tags.item(index.row()).setText(dlg.tag)
+        self.list_tags.sortItems()
+        self.putLabel(f"'{tag}' update OK!")
 
 
     def removeTags(self):

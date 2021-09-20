@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>750</width>
-    <height>388</height>
+    <height>477</height>
    </rect>
   </property>
   <property name="font">
@@ -162,6 +162,18 @@
          </item>
          <item>
           <widget class="QListWidget" name="list_tags"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_info_tag">
+           <property name="styleSheet">
+            <string notr="true">border-color: rgb(69, 83, 100);
+border-width: 1px;
+border-radius: 4px;</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
