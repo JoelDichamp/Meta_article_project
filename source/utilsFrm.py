@@ -13,7 +13,7 @@ DICT_ICONS = { "Add": u":/_rc/add_plus.png",
                "Cancel": u":/_rc/cancel.png" }
 
 RE_TAG = "[a-zA-Z0-9_-]+"
-RE_REQ = "[a-zA-Z0-9_-\s\(\)]+" # \s = whitespace
+RE_REQ = "[a-zA-Z0-9_-\s\(\)\\\]+" # \s = whitespace
 COLOR_FOUND_TXT = Qt.green
 
 
