@@ -2,6 +2,7 @@ from PySide2 import QtWidgets
 from functools import partial 
 from PySide2.QtCore import Slot, Qt, QRegExp
 from PySide2.QtGui import QKeySequence, QRegExpValidator
+from typing import List, Dict
 
 from uis.diag_maj_article import Ui_Dialog
 from updateTagUi import UpdateTag
@@ -11,7 +12,7 @@ import utilsFrm as uf
 
 
 class MajArticle(QtWidgets.QDialog, Ui_Dialog):
-    def __init__(self, fct: str, listAllTags: list[str], columnItem: int = utils.COL_ARTICLE, articleName: str = '', dictArticle: dict = {}):
+    def __init__(self, fct: str, listAllTags: List[str], columnItem: int = utils.COL_ARTICLE, articleName: str = '', dictArticle: Dict = {}):
       super().__init__()
       self.fct = fct
       self.listAllTags = listAllTags
@@ -54,7 +55,7 @@ class MajArticle(QtWidgets.QDialog, Ui_Dialog):
       self.list_tags.setSelectionMode(QtWidgets.QListWidget.ExtendedSelection)
 
       
-    def fillWidgets(self, columnItem: int, dictArticle: dict):
+    def fillWidgets(self, columnItem: int, dictArticle: Dict):
       self.le_articleName.setText(self.articleNameOri)
       self.list_tags.addItems(dictArticle[utils.D_TAGS].split())
       self.pdfFile.addItem(str(dictArticle[utils.D_PATH_PDF]))

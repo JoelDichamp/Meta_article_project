@@ -1,11 +1,10 @@
-from re import I
 from PySide2 import QtWidgets
 from PySide2 import QtCore
 from PySide2 import QtGui
 from PySide2.QtCore import Slot
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QKeySequence
-import re
+from typing import List
 
 from uis.diag_search_tags import Ui_Dialog
 import utils
@@ -19,7 +18,7 @@ E_AND = 'AND'
 
 
 class SearchTags(QtWidgets.QDialog, Ui_Dialog):
-  def __init__(self, listAllTags: list[str], searchTagsReq: str, ignoreCase: bool):
+  def __init__(self, listAllTags: List[str], searchTagsReq: str, ignoreCase: bool):
       super().__init__()
       self.listAllTags = listAllTags
       self.setupUi(self)
@@ -67,7 +66,7 @@ class SearchTags(QtWidgets.QDialog, Ui_Dialog):
     self.cbx_word_boundary.setChecked(False)
 
 
-  def automatReq(self, txtItem: str, listItemsReq: list[str]) -> list[str]:
+  def automatReq(self, txtItem: str, listItemsReq: List[str]) -> List[str]:
     listItems = []
     # print(txtItem, self.nbParOpen)
     if txtItem == E_TAG:
@@ -136,7 +135,7 @@ class SearchTags(QtWidgets.QDialog, Ui_Dialog):
     self.initUi()
 
 
-  def whichItem(self, iItem : int, listItemsReq: list[str]) -> str:
+  def whichItem(self, iItem : int, listItemsReq: List[str]) -> str:
     item = listItemsReq[iItem]
     if item.upper() == E_OR or item.upper() == E_AND:
       item = item.upper()
@@ -178,7 +177,7 @@ class SearchTags(QtWidgets.QDialog, Ui_Dialog):
 
       if i < len(listItemsReq) - 1:
         itemNext = self.whichItem((i+1), listItemsReq)
-        print("itemNext", itemNext)
+        # print("itemNext", itemNext)
         ok = False
         for item in listValidItems:
           if item == itemNext:

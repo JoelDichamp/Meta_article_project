@@ -4,7 +4,7 @@ from PySide2 import QtWidgets, QtCore
 from PySide2.QtCore import Slot, Qt
 from PySide2.QtGui import QFont, QTextCharFormat, QKeySequence
 from functools import partial
-from typing import Tuple
+from typing import Tuple, List, Dict
 
 import os
 import pathlib
@@ -65,7 +65,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
         os.startfile(pathFile)
 
 
-  def btnMajArticlePressed(self, fct: str, columnItem: int = utils.COL_ARTICLE, articleName: str = '', dictArticle: dict = {}):
+  def btnMajArticlePressed(self, fct: str, columnItem: int = utils.COL_ARTICLE, articleName: str = '', dictArticle: Dict = {}):
     dlg = MajArticle(fct, self.listAllTags, columnItem, articleName, dictArticle)
     dlg.exec_()
     if dlg.result() == QtWidgets.QDialog.Accepted:
@@ -157,7 +157,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
     return regEx, regExHighlight
 
 
-  def searchTags(self, regEx: str, ignoreCase: bool) -> list[pathlib.Path]:
+  def searchTags(self, regEx: str, ignoreCase: bool) -> List[pathlib.Path]:
     listPathArticles = []
     if ignoreCase:
       r = re.compile(regEx, re.I)
@@ -196,7 +196,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
     self.label.setText(text_label)
 
 
-  def putInfo(self, search: bool = False, ignoreCase: bool = False, listPathArticles: list[pathlib.Path] = [], infoLabel: str = ''):
+  def putInfo(self, search: bool = False, ignoreCase: bool = False, listPathArticles: List[pathlib.Path] = [], infoLabel: str = ''):
     if infoLabel:
       infoCase = 'IgnoreCase' if ignoreCase else 'CaseSensitive'
       infoLabel += '   ' + infoCase
@@ -208,7 +208,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
       self.btn_search_tags.setVisible(len(self.listAllTags) > 0) 
 
 
-  def getArticles(self, search: bool = False, regEx: str = '', ignoreCase: bool = False, listPathArticles: list[pathlib.Path] = [], infoLabel: str = ''):
+  def getArticles(self, search: bool = False, regEx: str = '', ignoreCase: bool = False, listPathArticles: List[pathlib.Path] = [], infoLabel: str = ''):
     self.tableArticles.clearContents()
     self.listAllTags = []
 

@@ -1,6 +1,6 @@
 import pathlib 
 import shutil
-from typing import Tuple
+from typing import Tuple, List, Dict
 import json
 import utils
 
@@ -55,6 +55,7 @@ def copyTags(articleName: str, tags: str) -> None:
   with open(p_dest, "w") as f:
     json.dump(listTags, f, indent=4)
 
+
 def renameFilesPdfNotes(articleName: str, fileName: str) -> str:
   p = pathlib.Path(fileName)
   newFile = utils.dataFolder / articleName / p.name
@@ -106,7 +107,7 @@ def removeArticle(articleName: str) -> Tuple[bool, str]:
   return ok, error_msg
 
 
-def getTagsArticle(article : pathlib.Path, d: dict):
+def getTagsArticle(article : pathlib.Path, d: Dict) -> Dict:
   p = article / utils.FILE_TAGS
   if p.exists():
     with open(p, "r") as f:
@@ -121,7 +122,7 @@ def getTagsArticle(article : pathlib.Path, d: dict):
   return d
 
 
-def getFilesArticle(article : pathlib.Path, d: dict, ext: str, d_file: str, d_pathFile: str):
+def getFilesArticle(article : pathlib.Path, d: Dict, ext: str, d_file: str, d_pathFile: str) -> Dict:
   p = article / (article.name + ext)
   if p.exists():
     d[d_file] = article.name + ext
@@ -133,7 +134,7 @@ def getFilesArticle(article : pathlib.Path, d: dict, ext: str, d_file: str, d_pa
   return d
 
 
-def getArticles(search: bool = False, articles: list[pathlib.Path] = []):
+def getArticles(search: bool = False, articles: List[pathlib.Path] = []) -> Dict:
   dictArticles = {}
 
   if not search:
