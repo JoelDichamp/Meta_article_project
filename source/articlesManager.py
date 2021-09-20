@@ -106,7 +106,7 @@ def removeArticle(articleName: str) -> Tuple[bool, str]:
   return ok, error_msg
 
 
-def getTagsArticle(article : pathlib.Path, d: dict) -> dict[str, dict[str, str]]:
+def getTagsArticle(article : pathlib.Path, d: dict):
   p = article / utils.FILE_TAGS
   if p.exists():
     with open(p, "r") as f:
@@ -121,7 +121,7 @@ def getTagsArticle(article : pathlib.Path, d: dict) -> dict[str, dict[str, str]]
   return d
 
 
-def getFilesArticle(article : pathlib.Path, d: dict, ext: str, d_file: str, d_pathFile: str) -> dict[str, dict[str, str]]:
+def getFilesArticle(article : pathlib.Path, d: dict, ext: str, d_file: str, d_pathFile: str):
   p = article / (article.name + ext)
   if p.exists():
     d[d_file] = article.name + ext
@@ -133,7 +133,7 @@ def getFilesArticle(article : pathlib.Path, d: dict, ext: str, d_file: str, d_pa
   return d
 
 
-def getArticles(search: bool = False, articles: list[pathlib.Path] = []) -> dict[str, dict[str, str]]:
+def getArticles(search: bool = False, articles: list[pathlib.Path] = []):
   dictArticles = {}
 
   if not search:
