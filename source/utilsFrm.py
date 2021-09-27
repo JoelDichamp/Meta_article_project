@@ -12,8 +12,9 @@ DICT_ICONS = { "Add": u":/_rc/add_plus.png",
                "Validate": u":/_rc/validate.png",
                "Cancel": u":/_rc/cancel.png" }
 
-RE_TAG = "[a-zA-Z0-9_-]+"
-RE_REQ = "[a-zA-Z0-9_-\s\(\)\\\]+" # \s = whitespace
+RE_TAG = "[a-zA-Z0-9_-àâäéèêëïîôöùûüÿç]+"
+RE_REQ = "[a-zA-Z0-9_-àâäéèêëïîôöùûüÿç\s\(\)\\\]+" # \s = whitespace
+# char diacritique du français : à-â-ä-é-è-ê-ë-ï-î-ô-ö-ù-û-ü-ÿ-ç   àâäéèêëïîôöùûüÿç
 COLOR_FOUND_TXT = Qt.green
 
 

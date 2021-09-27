@@ -7,6 +7,8 @@ from functools import partial
 from typing import Tuple, List, Dict
 
 import os
+import sys
+import subprocess
 import pathlib
 import re
 
@@ -49,6 +51,15 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
     QtWidgets.QShortcut(QKeySequence('Esc'), self, self.close)
 
 
+  def open_file(self, pathFile: str):
+    p = sys.platform
+    if p == "win32":
+      os.startfile(pathFile)
+    else:
+      opener = "open" if p == "darwin" else "xdg-open"
+      subprocess.call([opener, pathFile])
+
+
   @Slot() 
   def on_doubleClick(self, index):
     twi = self.tableArticles.item(index.row(), utils.COL_ARTICLE)
@@ -57,12 +68,10 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
     if (column == utils.COL_ARTICLE or column == utils.COL_TAGS) and (not self.btn_cancel_search_tags.isVisible()):
       self.btnMajArticlePressed(utils.FCT_UPDATE, column, twi.text(), dictArticle)
     elif column == utils.COL_PDF or column == utils.COL_NOTES:
-      k = utils.D_PATH_NOTES
-      if column == utils.COL_PDF:
-        k = utils.D_PATH_PDF
+      k = utils.D_PATH_NOTES if column == utils.COL_NOTES else utils.D_PATH_PDF
       pathFile = dictArticle[k]
       if pathFile:
-        os.startfile(pathFile)
+        self.open_file(pathFile)
 
 
   def btnMajArticlePressed(self, fct: str, columnItem: int = utils.COL_ARTICLE, articleName: str = '', dictArticle: Dict = {}):
