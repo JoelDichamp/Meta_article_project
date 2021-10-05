@@ -12,6 +12,8 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
+from uis.btnCustom import BtnCustom
+
 import ressource_rc
 
 class Ui_FormMetaArticle(object):
@@ -108,7 +110,7 @@ class Ui_FormMetaArticle(object):
 
         self.horizontalLayout_4.addWidget(self.btn_remove_article)
 
-        self.btn_add_article = QPushButton(self.w_article)
+        self.btn_add_article = BtnCustom(self.w_article)
         self.btn_add_article.setObjectName(u"btn_add_article")
         self.btn_add_article.setMinimumSize(QSize(160, 32))
         self.btn_add_article.setMaximumSize(QSize(160, 32))
@@ -195,6 +197,9 @@ class Ui_FormMetaArticle(object):
         self.btn_search_tags.setText(QCoreApplication.translate("FormMetaArticle", u"Search tags", None))
         self.btn_cancel_search_tags.setText(QCoreApplication.translate("FormMetaArticle", u"Cancel search tags", None))
         self.btn_remove_article.setText(QCoreApplication.translate("FormMetaArticle", u"Remove meta-articles", None))
+#if QT_CONFIG(whatsthis)
+        self.btn_add_article.setWhatsThis(QCoreApplication.translate("FormMetaArticle", u"nothing", None))
+#endif // QT_CONFIG(whatsthis)
         self.btn_add_article.setText(QCoreApplication.translate("FormMetaArticle", u"Add a meta-article", None))
         ___qtablewidgetitem = self.tableArticles.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("FormMetaArticle", u"Meta-article", None));
@@ -209,6 +214,9 @@ class Ui_FormMetaArticle(object):
         self.tableArticles.setSortingEnabled(False)
         self.tableArticles.setSortingEnabled(__sortingEnabled)
 
+#if QT_CONFIG(whatsthis)
+        self.tableArticles.setWhatsThis(QCoreApplication.translate("FormMetaArticle", u"nothing", None))
+#endif // QT_CONFIG(whatsthis)
         self.label.setText("")
     # retranslateUi
 

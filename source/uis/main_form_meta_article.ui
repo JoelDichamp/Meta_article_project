@@ -191,7 +191,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="btn_add_article">
+          <widget class="BtnCustom" name="btn_add_article">
            <property name="minimumSize">
             <size>
              <width>160</width>
@@ -203,6 +203,9 @@
              <width>160</width>
              <height>32</height>
             </size>
+           </property>
+           <property name="whatsThis">
+            <string>nothing</string>
            </property>
            <property name="text">
             <string>Add a meta-article</string>
@@ -221,6 +224,9 @@
    </item>
    <item row="1" column="0">
     <widget class="QTableWidget" name="tableArticles">
+     <property name="whatsThis">
+      <string>nothing</string>
+     </property>
      <property name="sizeAdjustPolicy">
       <enum>QAbstractScrollArea::AdjustIgnored</enum>
      </property>
@@ -322,6 +328,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BtnCustom</class>
+   <extends>QPushButton</extends>
+   <header>uis.btnCustom</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="icons/ressource.qrc"/>
  </resources>

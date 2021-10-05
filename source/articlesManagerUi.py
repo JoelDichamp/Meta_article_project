@@ -70,24 +70,31 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
     elif column == utils.COL_PDF or column == utils.COL_NOTES:
       k = utils.D_PATH_NOTES if column == utils.COL_NOTES else utils.D_PATH_PDF
       pathFile = dictArticle[k]
-      if pathFile:
+      if pathFile != pathlib.Path():
         self.open_file(pathFile)
 
 
+  def  refreshArticles(self, fct: str, articleName: str):
+    self.getArticles()
+    items = self.tableArticles.findItems(articleName, Qt.MatchExactly)
+    for item in items:
+      modelIndex = self.tableArticles.indexFromItem(item)
+      rng = QtWidgets.QTableWidgetSelectionRange(modelIndex.row(), utils.COL_ARTICLE, modelIndex.row(), utils.COL_NOTES)
+      self.tableArticles.setRangeSelected(rng, True)
+      self.tableArticles.scrollTo(modelIndex)
+      
+    self.putLabel(f"'{articleName}' {fct} OK!")
+
+
   def btnMajArticlePressed(self, fct: str, columnItem: int = utils.COL_ARTICLE, articleName: str = '', dictArticle: Dict = {}):
-    dlg = MajArticle(fct, self.listAllTags, columnItem, articleName, dictArticle)
-    dlg.exec_()
-    if dlg.result() == QtWidgets.QDialog.Accepted:
-      self.getArticles()
-      items = self.tableArticles.findItems(dlg.articleName, Qt.MatchExactly)
-      for item in items:
-        # item.setSelected(True)
-        modelIndex = self.tableArticles.indexFromItem(item)
-        rng = QtWidgets.QTableWidgetSelectionRange(modelIndex.row(), utils.COL_ARTICLE, modelIndex.row(), utils.COL_NOTES)
-        self.tableArticles.setRangeSelected(rng, True)
-        self.tableArticles.scrollTo(modelIndex)
-        
-      self.putLabel(f"'{dlg.articleName}' {fct} OK!")
+    if self.btn_add_article.whatsThis() != 'nothing': #un drag and drop sur btn_add_article a eu lieu
+      self.refreshArticles(utils.FCT_CREATE, self.btn_add_article.whatsThis())
+      self.btn_add_article.setWhatsThis('nothing')
+    else:
+      dlg = MajArticle(fct, self.listAllTags, columnItem, articleName, dictArticle)
+      dlg.exec_()
+      if dlg.result() == QtWidgets.QDialog.Accepted:
+        self.refreshArticles(fct, dlg.articleName)
 
 
   def btnRemoveArticlePressed(self):
@@ -244,7 +251,7 @@ class ArticlesManager(QtWidgets.QWidget, Ui_FormMetaArticle):
       self.tableArticles.setItem(iLine, utils.COL_PDF, pdf)     
       self.tableArticles.setItem(iLine, utils.COL_NOTES, notes)
 
-      listTags = self.dictArticles[k][utils.D_TAGS].split()
+      listTags = [] if self.dictArticles[k][utils.D_PATH_TAGS] == pathlib.Path() else self.dictArticles[k][utils.D_TAGS].split()
       [self.listAllTags.append(tag) for tag in listTags if not tag in self.listAllTags]
            
       iLine += 1

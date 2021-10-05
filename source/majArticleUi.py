@@ -3,6 +3,7 @@ from functools import partial
 from PySide2.QtCore import Slot, Qt, QRegExp
 from PySide2.QtGui import QKeySequence, QRegExpValidator
 from typing import List, Dict
+import pathlib
 
 from uis.diag_maj_article import Ui_Dialog
 from updateTagUi import UpdateTag
@@ -57,7 +58,8 @@ class MajArticle(QtWidgets.QDialog, Ui_Dialog):
       
     def fillWidgets(self, columnItem: int, dictArticle: Dict):
       self.le_articleName.setText(self.articleNameOri)
-      self.list_tags.addItems(dictArticle[utils.D_TAGS].split())
+      if dictArticle[utils.D_PATH_TAGS] != pathlib.Path():
+        self.list_tags.addItems(dictArticle[utils.D_TAGS].split())
       self.pdfFile.addItem(str(dictArticle[utils.D_PATH_PDF]))
       self.notesFile.addItem(str(dictArticle[utils.D_PATH_NOTES]))
 
